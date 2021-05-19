@@ -16,7 +16,7 @@
     <AssemblyName>TestApi</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort>44355</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
@@ -249,6 +249,9 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
     <COMReference Include="SAPbobsCOM">
       <Guid>{FC8030BE-F5D2-4B8E-8F92-44228FE30090}</Guid>
       <VersionMajor>9</VersionMajor>
@@ -277,7 +280,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51687</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44355/</IISUrl>
+          <IISUrl>http://localhost/TestApi</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

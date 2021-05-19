@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Odbc;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.Mvc;
+using System.Net;
+using System.Web;
+using System.Data;
+using System.Data.Odbc;
+using System.Net.Http;
+using System.Web.Http;
 using TestApi.Utils;
 using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
 using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
@@ -127,6 +127,60 @@ namespace TestApi.Controllers
         {
             public string RespCode { get; set; }
             public string Description { get; set; }
+        }
+
+        //Precios especiales
+        public class SpecialPrice
+        {
+            public string ItemCode { get; set; }
+            public string Price { get; set; }
+            public string Discount { get; set; }
+        }
+
+        [HttpGet]
+        [Route("api/getPrice")]
+        public HttpResponseMessage getPrice()
+        {
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=SBO_IDEACODEX;uid=sa;pwd=Soporte@2021"))
+            {
+                string query = "Select Price, ItemCode, Discount from OSPP";
+                cmd = new OdbcCommand(query, conn);
+                OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                da.Fill(ds, "Items");
+            }
+            return Request.CreateResponse(System.Net.HttpStatusCode.OK, ds);
+        }
+
+        [Route("api/CreatePrice")]
+        public IHttpActionResult CreatePrice(SpecialPrice specialPrice)
+        {
+            //Inicializo mi conexión a SAP
+            SAPConnection conncetion = new SAPConnection();
+            SAPbobsCOM.Company company = conncetion.OpenConnection();
+
+            SAPbobsCOM.Items oItems;
+            oItems = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oItems);
+            oItems.ItemCode = specialPrice.ItemCode;
+
+            int status = oItems.Add();
+
+            //Compruebo si el guardado se ha realizado correctamente
+            if (status == 0)
+            {
+                responseCall.RespCode = "00";
+                responseCall.Description = "Guardado correctamente";
+            }
+            else
+            {
+                responseCall.RespCode = "99";
+                responseCall.Description = company.GetLastErrorDescription().ToString();
+
+            }
+            return Ok(responseCall);
         }
     }
 }
