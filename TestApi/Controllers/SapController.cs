@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Results;
 using System.Web.Mvc;
-using System.Net;
 using System.Web;
+using System.Net;
 using System.Data;
 using System.Data.Odbc;
 using System.Net.Http;
@@ -22,6 +22,7 @@ namespace TestApi.Controllers
         //Instancia de la clase que devolverá la respuesta
         CallResponse responseCall = new CallResponse();
         #endregion
+                                //CREAR ARTÍCULOS
         //Función pública tipo respuesta HTTP
         [HttpPost]
         //Defino la ruta
@@ -53,7 +54,7 @@ namespace TestApi.Controllers
             return Ok(responseCall);
         }
 
-        //Editar datos
+                                //EDITAR ARTPICULOS
         //Función pública tipo respuesta HTTP
         [HttpPost]
         //Defino la ruta
@@ -77,7 +78,7 @@ namespace TestApi.Controllers
                 if (status == 0)
                 {
                     responseCall.RespCode = "00";
-                    responseCall.Description = "Guardado correctamente";
+                    responseCall.Description = "Artículo modificado correctamente";
                 }
                 else
                 {
@@ -96,7 +97,7 @@ namespace TestApi.Controllers
             return Ok(responseCall);
         }
 
-        //Mostrar datos
+                            //MOSTRAR ARTÍCULOS
         [HttpGet]
         [Route("api/getItems")]
         public HttpResponseMessage getItems()
@@ -112,31 +113,10 @@ namespace TestApi.Controllers
                 OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                 da.Fill(ds, "Items");
             }
-            return Request.CreateResponse(System.Net.HttpStatusCode.OK, ds);
+            return Request.CreateResponse(HttpStatusCode.OK, ds);
         }
 
-        public class ItemDetails
-        {
-            public string ItemName { get; set; }
-            public string ItemCode { get; set; }
-            public string BasePrice { get; set; }
-
-        }
-
-        public class CallResponse
-        {
-            public string RespCode { get; set; }
-            public string Description { get; set; }
-        }
-
-        //Precios especiales
-        public class SpecialPrice
-        {
-            public string ItemCode { get; set; }
-            public string Price { get; set; }
-            public string Discount { get; set; }
-        }
-
+                                //MOSTRAR PRECIOS
         [HttpGet]
         [Route("api/getPrice")]
         public HttpResponseMessage getPrice()
@@ -155,32 +135,22 @@ namespace TestApi.Controllers
             return Request.CreateResponse(System.Net.HttpStatusCode.OK, ds);
         }
 
-        [Route("api/CreatePrice")]
-        public IHttpActionResult CreatePrice(SpecialPrice specialPrice)
+                               
+
+                                //LLAMADA A MIS CAMPOS DE SAP
+        public class ItemDetails
         {
-            //Inicializo mi conexión a SAP
-            SAPConnection conncetion = new SAPConnection();
-            SAPbobsCOM.Company company = conncetion.OpenConnection();
+            public string ItemName { get; set; }
+            public string ItemCode { get; set; }
+            public string BasePrice { get; set; }
 
-            SAPbobsCOM.Items oItems;
-            oItems = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oItems);
-            oItems.ItemCode = specialPrice.ItemCode;
-
-            int status = oItems.Add();
-
-            //Compruebo si el guardado se ha realizado correctamente
-            if (status == 0)
-            {
-                responseCall.RespCode = "00";
-                responseCall.Description = "Guardado correctamente";
-            }
-            else
-            {
-                responseCall.RespCode = "99";
-                responseCall.Description = company.GetLastErrorDescription().ToString();
-
-            }
-            return Ok(responseCall);
         }
+
+        public class CallResponse
+        {
+            public string RespCode { get; set; }
+            public string Description { get; set; }
+        }
+
     }
 }
