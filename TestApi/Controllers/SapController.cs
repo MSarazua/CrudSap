@@ -13,6 +13,7 @@ using TestApi.Utils;
 using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
 using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
 using RouteAttribute = System.Web.Http.RouteAttribute;
+using SAPbobsCOM;
 
 namespace TestApi.Controllers
 {
@@ -22,7 +23,8 @@ namespace TestApi.Controllers
         //Instancia de la clase que devolverá la respuesta
         CallResponse responseCall = new CallResponse();
         #endregion
-                                //CREAR ARTÍCULOS
+
+        //CREAR ARTÍCULOS
         //Función pública tipo respuesta HTTP
         [HttpPost]
         //Defino la ruta
@@ -133,9 +135,7 @@ namespace TestApi.Controllers
                 da.Fill(ds, "Items");
             }
             return Request.CreateResponse(System.Net.HttpStatusCode.OK, ds);
-        }
-
-                               
+        }             
 
                                 //LLAMADA A MIS CAMPOS DE SAP
         public class ItemDetails
