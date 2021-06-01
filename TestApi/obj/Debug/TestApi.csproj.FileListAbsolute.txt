@@ -78,10 +78,10 @@ C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.Web.WebPages.D
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.Web.WebPages.Razor.xml
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\Antlr3.Runtime.pdb
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.csprojAssemblyReference.cache
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.csproj.CoreCompileInputs.cache
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.csproj.CopyComplete
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.dll
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.pdb
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\Interop.SAPbobsCOM.dll
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.csproj.ResolveComReference.cache
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.csprojAssemblyReference.cache

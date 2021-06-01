@@ -21,23 +21,50 @@ namespace TestApi.Controllers
         CallResponse responseCall = new CallResponse();
         #endregion
         // GET api/<controller>/5
-        [HttpGet]
+        [HttpPost]
         //Defino la ruta
         [Route("api/Pendientes")]
-        public HttpResponseMessage getAutoPendientes()
+        public IHttpActionResult getAutoPendientes(string listDatabases = "", string userSap = "", string userSapPass = "")
+        {
+            listDatabases.Split(',').ToList<string>();
+            //return Ok(listDatabases.Split(',').ToList<string>());
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            foreach (var item in listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select WddCode, Status, UserSign, Remarks, db_name() as db from OWDD where Status = 'W'";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
+            }
+            
+            return Ok(ds);
+        }
+
+        //EDITAR AUTORIZACIONES
+        //Función pública tipo respuesta HTTP
+        [HttpPost]
+        //Defino la ruta
+        [Route("api/getAllAuth")]
+        public IHttpActionResult getAllAuth(string dbname = "", string userSap = "", string userSapPass = "")
         {
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=SBO_IDEACODEX;uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database="+ dbname + ";uid=sa;pwd=Soporte@2021"))
             {
                 string query = "Select WddCode, Status, UserSign, Remarks from OWDD where Status = 'W'";
                 cmd = new OdbcCommand(query, conn);
                 OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                 da.Fill(ds, "Items");
             }
-            return Request.CreateResponse(HttpStatusCode.OK, ds);
+            return Ok(ds);
         }
 
         //EDITAR AUTORIZACIONES
@@ -45,24 +72,24 @@ namespace TestApi.Controllers
         [HttpPost]
         //Defino la ruta
         [Route("api/Autorizar")]
-        public IHttpActionResult UpdateItem(Authorizations authorizations)
+        public IHttpActionResult UpdateItem(int WddCode = 0, string Remarks = "", string dbname = "", string userSap = "", string userSapPass = "")
         { 
             //Inicializo mi conexión a SAP
             SAPConnection conncetion = new SAPConnection();
-            SAPbobsCOM.Company company = conncetion.OpenConnection();
+            SAPbobsCOM.Company company = conncetion.OpenConnection(dbname, userSap, userSapPass);
 
             SAPbobsCOM.CompanyService oCompanyService = company.GetCompanyService();
             SAPbobsCOM.ApprovalRequestsService approvalSrv = oCompanyService.GetBusinessService(SAPbobsCOM.ServiceTypes.ApprovalRequestsService);
             ApprovalRequestParams oParams = approvalSrv.GetDataInterface(ApprovalRequestsServiceDataInterfaces.arsApprovalRequestParams) as ApprovalRequestParams;
-            oParams.Code = authorizations.WddCode;
+            oParams.Code = WddCode;
             ApprovalRequest oData = approvalSrv.GetApprovalRequest(oParams);
 
             //Agregar una autorización
             oData.ApprovalRequestDecisions.Add();
-            oData.ApprovalRequestDecisions.Item(0).ApproverUserName = "manager";
-            oData.ApprovalRequestDecisions.Item(0).ApproverPassword = "Soporte@21";
+            oData.ApprovalRequestDecisions.Item(0).ApproverUserName = userSap;
+            oData.ApprovalRequestDecisions.Item(0).ApproverPassword = userSapPass;
             oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardApproved;
-            oData.ApprovalRequestDecisions.Item(0).Remarks = authorizations.Remarks;
+            oData.ApprovalRequestDecisions.Item(0).Remarks = Remarks;
 
             //Actualizar la autorización 
             approvalSrv.UpdateRequest(oData);
@@ -77,19 +104,6 @@ namespace TestApi.Controllers
         // DELETE api/<controller>/5
         public void Delete(int id)
         {
-        }
-
-        public class Authorizations
-        {
-            public int WddCode { get; set;  }
-            public string Remarks { get; set; }
-            public string Status { get; }
-        }
-
-        public class CallResponse
-        {
-            public string RespCode { get; set; }
-            public string Description { get; set; }
         }
 
         // GET api/<controller>/5
@@ -119,13 +133,15 @@ namespace TestApi.Controllers
             //Inicializo mi conexión a SAP
             SAPConnection conncetion = new SAPConnection();
             SAPbobsCOM.Company company = conncetion.OpenConnection();
-
             SAPbobsCOM.Documents draft;
+
             draft = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
             draft.GetByKey(createdocs.DocEntry);
             draft.Comments = createdocs.Comments;
-
+            draft.EDocStatus = (EDocStatusEnum)BoBoeStatus.boes_Created;
+            //draft.DocumentStatus = BoStatus.bost_Close;
             draft.Update();
+
             return Ok(responseCall);
         }
 
@@ -133,6 +149,19 @@ namespace TestApi.Controllers
         {
             public int DocEntry { get; set; }
             public string Comments { get; set; }
+        }
+
+        public class Authorizations
+        {
+            public int WddCode { get; set; }
+            public string Remarks { get; set; }
+            public string Status { get; }
+        }
+
+        public class CallResponse
+        {
+            public string RespCode { get; set; }
+            public string Description { get; set; }
         }
     }
 }
