@@ -85,3 +85,6 @@ C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.pdb
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\Interop.SAPbobsCOM.dll
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.csproj.ResolveComReference.cache
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.csprojAssemblyReference.cache
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.Web.Cors.dll
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.Web.Http.Cors.dll
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.Web.Http.Cors.xml
