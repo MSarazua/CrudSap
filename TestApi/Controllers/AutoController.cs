@@ -134,34 +134,6 @@ namespace TestApi.Controllers
             return Ok(responseCall);
         }
 
-        [HttpPost]
-        //Defino la ruta
-        [Route("api/DeniedAutho")]
-        public IHttpActionResult DeniedAutho([FromBody] Authorizations authorizations)
-        {
-            //Inicializo mi conexión a SAP
-            SAPConnection conncetion = new SAPConnection();
-            SAPbobsCOM.Company company = conncetion.OpenConnection(authorizations.dbname, authorizations.userSap, authorizations.userSapPass);
-
-            SAPbobsCOM.CompanyService oCompanyService = company.GetCompanyService();
-            SAPbobsCOM.ApprovalRequestsService approvalSrv = oCompanyService.GetBusinessService(SAPbobsCOM.ServiceTypes.ApprovalRequestsService);
-            ApprovalRequestParams oParams = approvalSrv.GetDataInterface(ApprovalRequestsServiceDataInterfaces.arsApprovalRequestParams) as ApprovalRequestParams;
-            oParams.Code = authorizations.WddCode;
-            ApprovalRequest oData = approvalSrv.GetApprovalRequest(oParams);
-
-            //Agregar una autorización
-            oData.ApprovalRequestDecisions.Add();
-            oData.ApprovalRequestDecisions.Item(0).ApproverUserName = authorizations.userSap;
-            oData.ApprovalRequestDecisions.Item(0).ApproverPassword = authorizations.userSapPass;
-            //Rechazar
-            oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardNotApproved;
-            oData.ApprovalRequestDecisions.Item(0).Remarks = authorizations.Remarks;
-
-            //Actualizar la autorización 
-            approvalSrv.UpdateRequest(oData);
-            return Ok(responseCall);
-        }
-
         // GET api/<controller>/5
         [HttpGet]
         //Defino la ruta
