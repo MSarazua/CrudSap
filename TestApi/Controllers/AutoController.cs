@@ -63,7 +63,7 @@ namespace TestApi.Controllers
             //Agregar una autorización
             oData.ApprovalRequestDecisions.Add();
             oData.ApprovalRequestDecisions.Item(0).ApproverUserName = "manager";
-            oData.ApprovalRequestDecisions.Item(0).ApproverPassword = "Admin02$";
+            oData.ApprovalRequestDecisions.Item(0).ApproverPassword = "Soporte@20";
             oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardApproved;
             oData.ApprovalRequestDecisions.Item(0).Remarks = authorizations.Remarks;
 
@@ -88,7 +88,7 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, b.WddCode, b.Remarks, a.DocTotal, b.status, x.compnyName, c.Name from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep,OADM x where b.Status = 'W'";
+                    string query = "Select a.docentry, f.USER_CODE, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, b.WddCode, b.Remarks, a.DocTotal, b.status, x.compnyName, c.Name, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join WDD1 e on b.WddCode = e.WddCode left join OUSR f on f.USERID = e.UserID,OADM x where b.Status = 'W'";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -118,7 +118,15 @@ namespace TestApi.Controllers
             oData.ApprovalRequestDecisions.Add();
             oData.ApprovalRequestDecisions.Item(0).ApproverUserName = authorizations.userSap;
             oData.ApprovalRequestDecisions.Item(0).ApproverPassword = authorizations.userSapPass;
-            oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardApproved;
+            //Autorizar
+            if (authorizations.Status == "Y")
+            {
+                oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardApproved;
+            }else
+                if (authorizations.Status == "N")
+            {
+                oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardNotApproved;
+            }
             oData.ApprovalRequestDecisions.Item(0).Remarks = authorizations.Remarks;
 
             //Actualizar la autorización 
@@ -184,7 +192,7 @@ namespace TestApi.Controllers
         {
             public int WddCode { get; set; }
             public string Remarks { get; set; }
-            public string Status { get; }
+            public string Status { get; set;  }
             public string userSap { get; set; }
             public string userSapPass { get; set; }
             public string dbname { get; set; }

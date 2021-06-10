@@ -8,7 +8,7 @@ namespace TestApi.Utils
     public class SAPConnection
     {
 
-        public SAPbobsCOM.Company OpenConnection(string companyDb = "SBO_IDEACODEX", string Usersap = "manager", string PassSap = "Admin02$")
+        public SAPbobsCOM.Company OpenConnection(string companyDb = "SBO_PRUEBA1", string Usersap = "manager", string PassSap = "Soporte@20")
         {
             SAPbobsCOM.Company oCompany = new SAPbobsCOM.Company();
             oCompany.Server = "PRUEBASTUSAP";
