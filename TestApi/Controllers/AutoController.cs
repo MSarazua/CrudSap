@@ -131,7 +131,50 @@ namespace TestApi.Controllers
 
             //Actualizar la autorización 
             approvalSrv.UpdateRequest(oData);
+            return Ok(authorizations);
+        }
+
+        [HttpPost]
+        //Defino la ruta
+        [Route("api/AutorizacionesMasivas")]
+        public IHttpActionResult AutorizacionesMasivas([FromBody] AuthorizationsM authorizationsm)
+        {
+            //return Ok (authorizationsm.WddCode[1]);
+            //Inicializo mi conexión a SAP
+            SAPConnection conncetion = new SAPConnection();
+            SAPbobsCOM.Company company = conncetion.OpenConnection(authorizationsm.dbname, authorizationsm.userSap, authorizationsm.userSapPass);
+
+            SAPbobsCOM.CompanyService oCompanyService = company.GetCompanyService();
+            SAPbobsCOM.ApprovalRequestsService approvalSrv = oCompanyService.GetBusinessService(SAPbobsCOM.ServiceTypes.ApprovalRequestsService);
+            ApprovalRequestParams oParams = approvalSrv.GetDataInterface(ApprovalRequestsServiceDataInterfaces.arsApprovalRequestParams) as ApprovalRequestParams;
+
+            for (int i = 0; i < authorizationsm.WddCode.Length; i++)
+            {
+                oParams.Code = authorizationsm.WddCode[i];
+                ApprovalRequest oData = approvalSrv.GetApprovalRequest(oParams);
+
+                //Agregar una autorización
+                oData.ApprovalRequestDecisions.Add();
+                oData.ApprovalRequestDecisions.Item(0).ApproverUserName = authorizationsm.userSap;
+                oData.ApprovalRequestDecisions.Item(0).ApproverPassword = authorizationsm.userSapPass;
+                //Autorizar
+                if (authorizationsm.Status == "Y")
+                {
+                    oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardApproved;
+                }
+                else
+                    if (authorizationsm.Status == "N")
+                {
+                    oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardNotApproved;
+                }
+                oData.ApprovalRequestDecisions.Item(0).Remarks = authorizationsm.Remarks;
+                //Actualizar la autorización 
+
+                approvalSrv.UpdateRequest(oData);
+            }
+
             return Ok(responseCall);
+            //return Json(new { status = "error", message = "error creating customer" }); 
         }
 
         // GET api/<controller>/5
@@ -197,6 +240,17 @@ namespace TestApi.Controllers
             public string userSapPass { get; set; }
             public string dbname { get; set; }
         }
+
+        public class AuthorizationsM
+        {
+            public string Remarks { get; set; }
+            public string Status { get; set; }
+            public string userSap { get; set; }
+            public string userSapPass { get; set; }
+            public string dbname { get; set; }
+            public int[] WddCode { get; set; }
+        }
+
         public class Connection
         {
             public string dbname { get; set; }
