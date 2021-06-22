@@ -88,7 +88,7 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, b.status, x.compnyName, c.Name, m.USER_CODE, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID,OADM x where b.Status = 'W'";
+                    string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'W'";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -131,7 +131,50 @@ namespace TestApi.Controllers
 
             //Actualizar la autorización 
             approvalSrv.UpdateRequest(oData);
+            return Ok(authorizations);
+        }
+
+        [HttpPost]
+        //Defino la ruta
+        [Route("api/AutorizacionesMasivas")]
+        public IHttpActionResult AutorizacionesMasivas([FromBody] AuthorizationsM authorizationsm)
+        {
+            //return Ok (authorizationsm.WddCode[1]);
+            //Inicializo mi conexión a SAP
+            SAPConnection conncetion = new SAPConnection();
+            SAPbobsCOM.Company company = conncetion.OpenConnection(authorizationsm.dbname, authorizationsm.userSap, authorizationsm.userSapPass);
+
+            SAPbobsCOM.CompanyService oCompanyService = company.GetCompanyService();
+            SAPbobsCOM.ApprovalRequestsService approvalSrv = oCompanyService.GetBusinessService(SAPbobsCOM.ServiceTypes.ApprovalRequestsService);
+            ApprovalRequestParams oParams = approvalSrv.GetDataInterface(ApprovalRequestsServiceDataInterfaces.arsApprovalRequestParams) as ApprovalRequestParams;
+
+            for (int i = 0; i < authorizationsm.WddCode.Length; i++)
+            {
+                oParams.Code = authorizationsm.WddCode[i];
+                ApprovalRequest oData = approvalSrv.GetApprovalRequest(oParams);
+
+                //Agregar una autorización
+                oData.ApprovalRequestDecisions.Add();
+                oData.ApprovalRequestDecisions.Item(0).ApproverUserName = authorizationsm.userSap;
+                oData.ApprovalRequestDecisions.Item(0).ApproverPassword = authorizationsm.userSapPass;
+                //Autorizar
+                if (authorizationsm.Status == "Y")
+                {
+                    oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardApproved;
+                }
+                else
+                    if (authorizationsm.Status == "N")
+                {
+                    oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardNotApproved;
+                }
+                oData.ApprovalRequestDecisions.Item(0).Remarks = authorizationsm.Remarks;
+                //Actualizar la autorización 
+
+                approvalSrv.UpdateRequest(oData);
+            }
+
             return Ok(responseCall);
+            //return Json(new { status = "error", message = "error creating customer" }); 
         }
 
         // GET api/<controller>/5
@@ -197,6 +240,17 @@ namespace TestApi.Controllers
             public string userSapPass { get; set; }
             public string dbname { get; set; }
         }
+
+        public class AuthorizationsM
+        {
+            public string Remarks { get; set; }
+            public string Status { get; set; }
+            public string userSap { get; set; }
+            public string userSapPass { get; set; }
+            public string dbname { get; set; }
+            public int[] WddCode { get; set; }
+        }
+
         public class Connection
         {
             public string dbname { get; set; }
