@@ -113,7 +113,28 @@ namespace TestApi.Controllers
             OdbcCommand cmd;
             using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
             {
-                string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'W' and  b.WddCode=" + requestPendientes.WddCode + "and m.USER_CODE='" + requestPendientes.userSap + "'";
+                string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode, OADM x where b.Status = 'W' and  b.WddCode=" + requestPendientes.WddCode + "";
+                cmd = new OdbcCommand(query, conn);
+                OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                da.Fill(ds, "Items");
+            }
+            return Ok(ds);
+        }
+
+        // GET api/<controller>/5
+        [HttpPost]
+        //Defino la ruta
+        [Route("api/archivos")]
+        public IHttpActionResult getArchivos([FromBody] RequestPendientes requestPendientes)
+        {
+            //requestPendientes.listDatabases.Split(',').ToList<string>();
+            //return Ok(listDatabases.Split(',').ToList<string>());
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            {
+                string query = "Select p.FileName, p.FileExt, p.srcPath, p.trgtPath from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join ATC1 p on p.absentry = a.AtcEntry,OADM x where b.Status = 'W' and  b.WddCode=" + requestPendientes.WddCode + "";
                 cmd = new OdbcCommand(query, conn);
                 OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                 da.Fill(ds, "Items");
@@ -200,8 +221,6 @@ namespace TestApi.Controllers
             return Ok(responseCall);
             //return Json(new { status = "error", message = "error creating customer" }); 
         }
-
-        
 
         // GET api/<controller>/5
         [HttpGet]
