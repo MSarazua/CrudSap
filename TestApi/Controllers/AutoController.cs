@@ -187,7 +187,7 @@ namespace TestApi.Controllers
             OdbcCommand cmd;
             using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
             {
-                string query = "Select a.Segment_0 +' ' + a.AcctName as NombreCuenta, b.AcctCode +' ' + b.AcctName, c.AcctCode +' ' + c.AcctName, d.AcctCode +' ' + d.AcctName, convert(varchar(1),e.GroupMask) +' ' + e.AcctName from OACT a left join OACT b on a.FatherNum = b.AcctCode left join OACT c on b.FatherNum = c.AcctCode left join OACT d on c.FatherNum = d.AcctCode left join OACT e on d.FatherNum = e.AcctCode where a.AcctCode = '" + requestPendientes.AcctCode + "'";
+                string query = "Select a.Segment_0 +' ' + a.AcctName as NombreCuenta, b.AcctCode +' ' + b.AcctName, c.AcctCode +' ' + c.AcctName, d.AcctCode +' ' + d.AcctName, convert(varchar(1),e.GroupMask) +' ' + e.AcctName from OACT a left join OACT b on a.FatherNum = b.AcctCode left join OACT c on b.FatherNum = c.AcctCode left join OACT d on c.FatherNum = d.AcctCode left join OACT e on d.FatherNum = e.AcctCode where a.Segment_0 = '" + requestPendientes.Segment_0 + "'";
                 cmd = new OdbcCommand(query, conn);
                 OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                 da.Fill(ds, "Items");
@@ -402,7 +402,7 @@ namespace TestApi.Controllers
             public string userSap { get; set; }
             public string userSapPass { get; set; }
             public int WddCode { get; set; }
-            public string AcctCode { get; set; }
+            public int Segment_0 { get; set; }
             
         }
     }
