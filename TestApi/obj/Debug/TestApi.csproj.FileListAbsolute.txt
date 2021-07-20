@@ -88,3 +88,11 @@ C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\obj\Debug\TestApi.csprojA
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.Web.Cors.dll
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.Web.Http.Cors.dll
 C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.Web.Http.Cors.xml
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\Microsoft.IdentityModel.Logging.dll
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\Microsoft.IdentityModel.Tokens.dll
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\Microsoft.IdentityModel.JsonWebTokens.xml
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\Microsoft.IdentityModel.Logging.xml
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\Microsoft.IdentityModel.Tokens.xml
+C:\Users\PCTECBUS\source\repos\TestSap\TestApi\TestApi\bin\System.IdentityModel.Tokens.Jwt.xml

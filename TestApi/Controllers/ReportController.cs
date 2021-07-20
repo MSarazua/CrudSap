@@ -253,12 +253,57 @@ namespace TestApi.Controllers
             return Ok(ds);
         }
 
+        [HttpPost]
+        [Route("api/EstadoResultados")]
+        public IHttpActionResult EstadoResultados([FromBody] RequestEstadoResultados requestEstadoResultados)
+        {
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+               using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestEstadoResultados.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "SELECT * FROM [dbo].[fnEstadoResultado] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "') GO";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
+            return Ok(ds);
+        }
+
+        [HttpPost]
+        [Route("api/BalanceGeneral")]
+        public IHttpActionResult BalanceGeneral([FromBody] RequestEstadoResultados requestEstadoResultados)
+        {
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestEstadoResultados.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            {
+                string query = "SELECT * FROM [dbo].[fnBalanceGeneral] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "') GO";
+                cmd = new OdbcCommand(query, conn);
+                OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                da.Fill(ds, "Items");
+            }
+            return Ok(ds);
+        }
+
         public class RequestPendientes
         {
             public string listDatabases { get; set; }
             public string userSap { get; set; }
             public string userSapPass { get; set; }
             public int WddCode { get; set; }
+        }
+
+        public class RequestEstadoResultados
+        {
+            public string listDatabases { get; set; }
+            public string fechaIni { get; set; }
+            public string fechaFin { get; set; }
+            public string fechaInicial { get; set; }
+            public string fechaFinal { get; set; }
         }
     }
 }
