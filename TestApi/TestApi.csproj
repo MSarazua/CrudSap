@@ -175,6 +175,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AutoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SapController.cs" />
     <Compile Include="Global.asax.cs">

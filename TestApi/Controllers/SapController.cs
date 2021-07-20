@@ -29,7 +29,7 @@ namespace TestApi.Controllers
         [HttpPost]
         //Defino la ruta
         [Route("api/CreateItem")]
-        public IHttpActionResult CreateItem(ItemDetails itemDetails)
+        public IHttpActionResult CreateItem([FromBody] ItemDetails itemDetails)
         {
             //Inicializo mi conexión a SAP
             SAPConnection conncetion = new SAPConnection();
@@ -143,6 +143,9 @@ namespace TestApi.Controllers
             public string ItemName { get; set; }
             public string ItemCode { get; set; }
             public string BasePrice { get; set; }
+            public string userSap { get; set; }
+            public string userSapPass { get; set; }
+            public string dbname { get; set; }
 
         }
 
