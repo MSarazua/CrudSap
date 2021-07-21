@@ -263,7 +263,7 @@ namespace TestApi.Controllers
 
                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestEstadoResultados.listDatabases + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "SELECT * FROM [dbo].[fnEstadoResultado] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "') GO";
+                    string query = "SELECT * FROM [dbo].[fnEstadoResultado] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "', '" + requestEstadoResultados.Nivel + "') GO";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -281,7 +281,7 @@ namespace TestApi.Controllers
 
             using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestEstadoResultados.listDatabases + ";uid=sa;pwd=Soporte@2021"))
             {
-                string query = "SELECT * FROM [dbo].[fnBalanceGeneral] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "') GO";
+                string query = "SELECT * FROM [dbo].[fnBalanceGeneral] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "', '" + requestEstadoResultados.Nivel + "') GO";
                 cmd = new OdbcCommand(query, conn);
                 OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                 da.Fill(ds, "Items");
@@ -304,6 +304,7 @@ namespace TestApi.Controllers
             public string fechaFin { get; set; }
             public string fechaInicial { get; set; }
             public string fechaFinal { get; set; }
+            public string Nivel { get; set; }
         }
     }
 }
