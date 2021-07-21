@@ -28,6 +28,7 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
+                    //El where se debe aplicar sí y solo sí, en Sap los clientes tienen el campo personalizado de notificación. 1 = Si, 0 = No
                     string query = "Select a.CardCode, a.CardName, b.E_MailL, a.Balance, db_name() as databases from SBODemoGT.dbo.OCRD a inner join SBODemoGT.dbo.OCPR b on a.CardCode = b.CardCode where b.U_Notificacion_cobro = 1  and a.Balance > 0";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
@@ -58,6 +59,27 @@ namespace TestApi.Controllers
             return Ok(ds);
         }
 
+        [HttpPost]
+        [Route("api/DetalleVentas")]
+        public IHttpActionResult DetalleVentas([FromBody] RequestPendientes requestPendientes)
+        {
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select a.DocDate, a.DocDueDate, a.DocNum, a.CardCode, a.CardName, a.DocTotal, db_name() as databases from OINV a where a.DocDate between '" + requestPendientes.fecha2 + "' and '" + requestPendientes.fecha1 + "' and a.CardCode = '" + requestPendientes.CardCode + "'";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
+            }
+            return Ok(ds);
+        }
+
         // POST api/<controller>
         public void Post([FromBody] string value)
         {
@@ -79,6 +101,8 @@ namespace TestApi.Controllers
             public string userSap { get; set; }
             public string userSapPass { get; set; }
             public string CardCode { get; set; }
+            public string fecha1 { get; set; }
+            public string fecha2 { get; set; }
         }
     }
 }
