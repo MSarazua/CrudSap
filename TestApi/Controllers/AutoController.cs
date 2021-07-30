@@ -36,40 +36,13 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, b.WddCode, b.Remarks, a.DocTotal, b.status, x.compnyName, c.Name, m.USER_CODE, a.DocCur, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join OUSR m on m.USERID = b.UserSign  left join OSLP n on n.SlpCode = a.SlpCode, OADM x where b.Status = 'W'";
+                    string query = "Select TOP 100 a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, b.WddCode, b.Remarks, a.DocTotal, b.status, x.compnyName, c.Name, m.USER_CODE, a.DocCur, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join OUSR m on m.USERID = b.UserSign  left join OSLP n on n.SlpCode = a.SlpCode, OADM x where b.Status = 'W'";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
                 }
             }
             return Ok(ds);
-        }
-
-        //Autorizar uno
-        [HttpPost]
-        [Route("api/Autorizar")]
-        public IHttpActionResult UpdateItem(Authorizations authorizations)
-        {
-            //Inicializo mi conexión a SAP
-            SAPConnection conncetion = new SAPConnection();
-            SAPbobsCOM.Company company = conncetion.OpenConnection();
-
-            SAPbobsCOM.CompanyService oCompanyService = company.GetCompanyService();
-            SAPbobsCOM.ApprovalRequestsService approvalSrv = oCompanyService.GetBusinessService(SAPbobsCOM.ServiceTypes.ApprovalRequestsService);
-            ApprovalRequestParams oParams = approvalSrv.GetDataInterface(ApprovalRequestsServiceDataInterfaces.arsApprovalRequestParams) as ApprovalRequestParams;
-            oParams.Code = authorizations.WddCode;
-            ApprovalRequest oData = approvalSrv.GetApprovalRequest(oParams);
-
-            //Agregar una autorización
-            oData.ApprovalRequestDecisions.Add();
-            oData.ApprovalRequestDecisions.Item(0).ApproverUserName = "manager";
-            oData.ApprovalRequestDecisions.Item(0).ApproverPassword = "Soporte@20";
-            oData.ApprovalRequestDecisions.Item(0).Status = BoApprovalRequestDecisionEnum.ardApproved;
-            oData.ApprovalRequestDecisions.Item(0).Remarks = authorizations.Remarks;
-
-            //Actualizar la autorización 
-            approvalSrv.UpdateRequest(oData);
-            return Ok(responseCall);
         }
 
         // Pendientes
@@ -86,7 +59,7 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'W'";
+                    string query = "Select TOP 100 a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'W'";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -109,7 +82,7 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'Y'";
+                    string query = "Select TOP 100 a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'Y'";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -132,7 +105,7 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'N'";
+                    string query = "Select TOP 100 a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'N'";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
