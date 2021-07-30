@@ -106,18 +106,21 @@ namespace TestApi.Controllers
         [Route("api/getItems")]
         public HttpResponseMessage getItems([FromBody] RequestArticulos requestArticulos)
         {
-            //requestArticulos.listDatabases.Split(',').ToList<string>();
+            requestArticulos.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestArticulos.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
                     string query = "Select ItemName, ItemCode from OITM";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
                 }
+            }
             return Request.CreateResponse(HttpStatusCode.OK, ds);
         }
 
@@ -133,7 +136,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
                     string query = "Select * from ORDR";
                     cmd = new OdbcCommand(query, conn);
@@ -157,7 +160,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
                     string query = "Select * from OPRC";
                     cmd = new OdbcCommand(query, conn);
