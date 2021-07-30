@@ -14,9 +14,11 @@ using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
 using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
 using RouteAttribute = System.Web.Http.RouteAttribute;
 using SAPbobsCOM;
+using System.Web.Http.Cors;
 
 namespace TestApi.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class SapController : ApiController
     {
         #region Variables
@@ -33,7 +35,7 @@ namespace TestApi.Controllers
         {
             //Inicializo mi conexión a SAP
             SAPConnection conncetion = new SAPConnection();
-            SAPbobsCOM.Company company = conncetion.OpenConnection();
+            SAPbobsCOM.Company company = conncetion.OpenConnection(itemDetails.dbname, itemDetails.userSap, itemDetails.userSapPass);
 
             SAPbobsCOM.Items oItems;
             oItems = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oItems);
@@ -65,7 +67,7 @@ namespace TestApi.Controllers
         {
             //Inicializo mi conexión a SAP
             SAPConnection conncetion = new SAPConnection();
-            SAPbobsCOM.Company company = conncetion.OpenConnection();
+            SAPbobsCOM.Company company = conncetion.OpenConnection(itemDetails.dbname, itemDetails.userSap, itemDetails.userSapPass);
 
             SAPbobsCOM.Items oItems;
             oItems = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oItems);
@@ -100,42 +102,71 @@ namespace TestApi.Controllers
         }
 
                             //MOSTRAR ARTÍCULOS
-        [HttpGet]
+        [HttpPost]
         [Route("api/getItems")]
-        public HttpResponseMessage getItems()
+        public HttpResponseMessage getItems([FromBody] RequestArticulos requestArticulos)
         {
+            //requestArticulos.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=SBO_IDEACODEX;uid=sa;pwd=Soporte@2021"))
-            {
-                string query = "Select ItemName, ItemCode from OITM";
-                cmd = new OdbcCommand(query, conn);
-                OdbcDataAdapter da = new OdbcDataAdapter(cmd);
-                da.Fill(ds, "Items");
-            }
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestArticulos.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select ItemName, ItemCode from OITM";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
             return Request.CreateResponse(HttpStatusCode.OK, ds);
         }
 
-                                //MOSTRAR PRECIOS
-        [HttpGet]
-        [Route("api/getPrice")]
-        public HttpResponseMessage getPrice()
+                               //TRAER CLIENTES
+        [HttpPost]
+        [Route("api/getClientes")]
+        public HttpResponseMessage getClientes([FromBody] RequestArticulos requestArticulos)
         {
+            requestArticulos.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=SBO_IDEACODEX;uid=sa;pwd=Soporte@2021"))
+            foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                string query = "Select Price, ItemCode, Discount from OSPP";
-                cmd = new OdbcCommand(query, conn);
-                OdbcDataAdapter da = new OdbcDataAdapter(cmd);
-                da.Fill(ds, "Items");
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select * from ORDR";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
             }
-            return Request.CreateResponse(System.Net.HttpStatusCode.OK, ds);
-        }             
+
+            return Request.CreateResponse(HttpStatusCode.OK, ds);
+        }
+
+                                //CENTROS DE COSTO
+        [HttpPost]
+        [Route("api/CentrosCosto")]
+        public HttpResponseMessage getCentrosCosto([FromBody] RequestArticulos requestArticulos)
+        {
+            requestArticulos.listDatabases.Split(',').ToList<string>();
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select * from OPRC";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, ds);
+        }
 
                                 //LLAMADA A MIS CAMPOS DE SAP
         public class ItemDetails
@@ -147,6 +178,12 @@ namespace TestApi.Controllers
             public string userSapPass { get; set; }
             public string dbname { get; set; }
 
+        }
+
+        public class RequestArticulos
+        {
+            public string listDatabases { get; set; }
+            public string server { get; set; }
         }
 
         public class CallResponse

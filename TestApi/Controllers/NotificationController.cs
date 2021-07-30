@@ -13,13 +13,9 @@ namespace TestApi.Controllers
     public class NotificationController : ApiController
     {
         [HttpPost]
-        //Defino la ruta
-        //Recordatorio de pago
         [Route("api/RecordatorioPago")]
         public IHttpActionResult RecordatorioPago([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;

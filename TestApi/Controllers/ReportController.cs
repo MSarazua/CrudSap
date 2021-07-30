@@ -14,13 +14,9 @@ namespace TestApi.Controllers
     {
                                     //Gráficas por empresa
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones pendientes y monto
         [Route("api/QuantityAutho")]
         public IHttpActionResult QuantityAutho([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -37,13 +33,9 @@ namespace TestApi.Controllers
         }
 
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones pendientes y monto
         [Route("api/CompanyAutho")]
         public IHttpActionResult CompanyAutho([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -60,13 +52,9 @@ namespace TestApi.Controllers
         }
 
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones por Categoria  y Monto
         [Route("api/CategoryAutho")]
         public IHttpActionResult CategoryAutho([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -83,13 +71,9 @@ namespace TestApi.Controllers
         }
 
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones por proveedor  y Monto
         [Route("api/ProveedorAutho")]
         public IHttpActionResult ProveedorAutho([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -106,13 +90,9 @@ namespace TestApi.Controllers
         }
 
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones por Comprador  y Monto
         [Route("api/CompradorAutho")]
         public IHttpActionResult CompradorAutho([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -129,13 +109,10 @@ namespace TestApi.Controllers
 
                                     //Gráfica por varias empresas
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones pendientes y monto
         [Route("api/QuantityAuthos")]
         public IHttpActionResult QuantityAuthos([FromBody] RequestPendientes requestPendientes)
         {
             requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -154,13 +131,9 @@ namespace TestApi.Controllers
         }
 
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones pendientes y monto
         [Route("api/CompanyAuthos")]
         public IHttpActionResult CompanyAuthos([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -179,13 +152,9 @@ namespace TestApi.Controllers
         }
 
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones por Categoria  y Monto
         [Route("api/CategoryAuthos")]
         public IHttpActionResult CategoryAuthos([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -204,13 +173,9 @@ namespace TestApi.Controllers
         }
 
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones por proveedor  y Monto
         [Route("api/ProveedorAuthos")]
         public IHttpActionResult ProveedorAuthos([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -229,13 +194,9 @@ namespace TestApi.Controllers
         }
 
         [HttpPost]
-        //Defino la ruta
-        //Autorizaciones por Comprador  y Monto
         [Route("api/CompradorAuthos")]
         public IHttpActionResult CompradorAuthos([FromBody] RequestPendientes requestPendientes)
         {
-            //requestPendientes.listDatabases.Split(',').ToList<string>();
-            //return Ok(listDatabases.Split(',').ToList<string>());
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
