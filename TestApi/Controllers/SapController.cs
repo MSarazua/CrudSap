@@ -41,6 +41,11 @@ namespace TestApi.Controllers
             oItems = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oItems);
             oItems.ItemCode = itemDetails.ItemCode;
             oItems.ItemName = itemDetails.ItemName;
+            oItems.BarCode = itemDetails.BarCodes;
+            oItems.ItemsGroupCode = itemDetails.ItemsGroupCode;
+
+            //oItems.QuantityOnStock = itemDetails.QuantityOnStock;
+
             int status = oItems.Add();
 
             //Compruebo si el guardado se ha realizado correctamente
@@ -106,22 +111,48 @@ namespace TestApi.Controllers
         [Route("api/getItems")]
         public HttpResponseMessage getItems([FromBody] RequestArticulos requestArticulos)
         {
-            //requestArticulos.listDatabases.Split(',').ToList<string>();
+            requestArticulos.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + requestArticulos.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select ItemName, ItemCode from OITM";
+                    string query = "Select a.ItemName, a.ItemCode, b.ItmsGrpNam, c.WhsCode, c.OnHand, db_name() as databases from OITM a inner join OITB b on a.ItmsGrpCod = b.ItmsGrpCod left join OITW c on c.ItemCode = a.ItemCode";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
                 }
+            }
             return Request.CreateResponse(HttpStatusCode.OK, ds);
         }
 
-                               //TRAER CLIENTES
+        //Grupo de artículos
+        [HttpPost]
+        [Route("api/grupoArticulos")]
+        public HttpResponseMessage getGrupoArticulos([FromBody] RequestArticulos requestArticulos)
+        {
+            requestArticulos.listDatabases.Split(',').ToList<string>();
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select ItmsGrpCod, ItmsGrpNam, db_name() as databases from OITB";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, ds);
+        }
+
+        //TRAER CLIENTES
         [HttpPost]
         [Route("api/getClientes")]
         public HttpResponseMessage getClientes([FromBody] RequestArticulos requestArticulos)
@@ -133,7 +164,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
                     string query = "Select * from ORDR";
                     cmd = new OdbcCommand(query, conn);
@@ -157,7 +188,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=PRUEBASTUSAP;Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
                     string query = "Select * from OPRC";
                     cmd = new OdbcCommand(query, conn);
@@ -177,7 +208,9 @@ namespace TestApi.Controllers
             public string userSap { get; set; }
             public string userSapPass { get; set; }
             public string dbname { get; set; }
-
+            public double QuantityOnStock { get; set; }
+            public string BarCodes { get; set; }
+            public int ItemsGroupCode { get; set; }
         }
 
         public class RequestArticulos
