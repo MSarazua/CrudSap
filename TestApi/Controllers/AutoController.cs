@@ -318,7 +318,7 @@ namespace TestApi.Controllers
             draft = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oDrafts);
             draft.GetByKey(createdocs.DocEntry);
             draft.Comments = createdocs.Comments;
-            draft.EDocStatus = (EDocStatusEnum)BoBoeStatus.boes_Created;
+            draft.EDocStatus = (EDocStatusEnum)BoBoeStatus.boes_Closed;
             //draft.DocumentStatus = BoStatus.bost_Close;
             draft.Update();
 
