@@ -40,7 +40,7 @@ namespace TestApi.Controllers
             oItems.ItemCode = itemDetails.ItemCode;
             oItems.ItemName = itemDetails.ItemName;
             oItems.BarCode = itemDetails.BarCodes;
-            oItems.ItemsGroupCode = itemDetails.ItemsGroupCode;
+            //oItems.ItemsGroupCode = itemDetails.ItemsGroupCode;
             oItems.Manufacturer = itemDetails.Manufacturer;
 
             int status = oItems.Add();
@@ -78,6 +78,10 @@ namespace TestApi.Controllers
             {
                 oItems.ItemCode = itemDetails.ItemCode;
                 oItems.ItemName = itemDetails.ItemName;
+                oItems.BarCode = itemDetails.BarCodes;
+                //oItems.ItemsGroupCode = itemDetails.ItemsGroupCode;
+                oItems.Manufacturer = itemDetails.Manufacturer;
+
                 int status = oItems.Update();
 
                 //Compruebo si el guardado se ha realizado correctamente
@@ -230,6 +234,56 @@ namespace TestApi.Controllers
                 responseCall.Description = company.GetLastErrorDescription().ToString();
 
             }
+            return Ok(responseCall);
+        }
+
+        //Modificar Cientes
+        [HttpPost]
+        //Defino la ruta
+        [Route("api/UpdateClient")]
+        public IHttpActionResult UpdateClient(RequestClientes requestClientes)
+        {
+            //Inicializo mi conexión a SAP
+            SAPConnection conncetion = new SAPConnection();
+            SAPbobsCOM.Company company = conncetion.OpenConnection(requestClientes.dbname, requestClientes.userSap, requestClientes.userSapPass);
+
+            SAPbobsCOM.BusinessPartners vBP;
+            vBP = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oBusinessPartners);
+
+            if (vBP.GetByKey(requestClientes.CardCode))
+            {
+                vBP.CardCode = requestClientes.CardCode;
+                vBP.CardName = requestClientes.CardName;
+                vBP.FederalTaxID = requestClientes.FederalTaxID;
+                //vBP.CardType = requestClientes.CardType;
+                vBP.Address = requestClientes.Address;
+                vBP.EmailAddress = requestClientes.EmailAddress;
+                vBP.Phone1 = requestClientes.Phone1;
+                vBP.Phone2 = requestClientes.Phone2;
+                vBP.PriceListNum = requestClientes.ListNum;
+
+                int status = vBP.Update();
+
+                //Compruebo si el guardado se ha realizado correctamente
+                if (status == 0)
+                {
+                    responseCall.RespCode = "00";
+                    responseCall.Description = "Cliente modificado correctamente";
+                }
+                else
+                {
+                    responseCall.RespCode = "99";
+                    responseCall.Description = company.GetLastErrorDescription().ToString();
+
+                }
+            }
+            else
+            {
+                responseCall.RespCode = "90";
+                responseCall.Description = "El cliente no se encuentra en SAP";
+
+            }
+
             return Ok(responseCall);
         }
 
