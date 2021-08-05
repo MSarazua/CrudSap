@@ -222,9 +222,9 @@ namespace TestApi.Controllers
             DataTable itemsData;
             OdbcCommand cmd;
 
-               using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestEstadoResultados.server + ";Database=" + requestEstadoResultados.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+               using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestEstadoResultados.server + ";Database=CRM_MODUS;uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "SELECT * FROM [dbo].[fnEstadoResultado] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "', '" + requestEstadoResultados.Nivel + "') GO";
+                    string query = "SELECT * FROM '" + requestEstadoResultados.listDatabases + "'.[dbo].[fnEstadoResultado] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "', '" + requestEstadoResultados.Nivel + "') GO";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");

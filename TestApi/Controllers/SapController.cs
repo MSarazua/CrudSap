@@ -27,9 +27,7 @@ namespace TestApi.Controllers
         #endregion
 
         //CREAR ARTÍCULOS
-        //Función pública tipo respuesta HTTP
         [HttpPost]
-        //Defino la ruta
         [Route("api/CreateItem")]
         public IHttpActionResult CreateItem([FromBody] ItemDetails itemDetails)
         {
@@ -43,8 +41,7 @@ namespace TestApi.Controllers
             oItems.ItemName = itemDetails.ItemName;
             oItems.BarCode = itemDetails.BarCodes;
             oItems.ItemsGroupCode = itemDetails.ItemsGroupCode;
-
-            //oItems.QuantityOnStock = itemDetails.QuantityOnStock;
+            oItems.Manufacturer = itemDetails.Manufacturer;
 
             int status = oItems.Add();
 
@@ -120,7 +117,7 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select a.ItemName, a.ItemCode, b.ItmsGrpNam, c.WhsCode, c.OnHand, db_name() as databases from OITM a inner join OITB b on a.ItmsGrpCod = b.ItmsGrpCod left join OITW c on c.ItemCode = a.ItemCode";
+                    string query = "Select a.ItemName, a.ItemCode, b.ItmsGrpNam, c.WhsCode, c.OnHand, db_name() as databases, d.FirmName from OITM a inner join OITB b on a.ItmsGrpCod = b.ItmsGrpCod left join OITW c on c.ItemCode = a.ItemCode left join OMRC d on d.FirmCode = a.FirmCode";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -152,6 +149,30 @@ namespace TestApi.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, ds);
         }
 
+        //Mostrar Fabricantes
+        [HttpPost]
+        [Route("api/getFabricante")]
+        public HttpResponseMessage getFabricante([FromBody] RequestArticulos requestArticulos)
+        {
+            requestArticulos.listDatabases.Split(',').ToList<string>();
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select FirmCode, FirmName, db_name() as databases from OMRC";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, ds);
+        }
+
         //TRAER CLIENTES
         [HttpPost]
         [Route("api/getClientes")]
@@ -166,7 +187,7 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select * from ORDR";
+                    string query = "Select a.CardCode, a.CardName, b.GroupName, a.Address, a.E_Mail, a.Phone1, a.Phone2, a.Balance, c.ListName, d.PymntGroup, a.LicTradNum, db_name() as databases, a.CardType, case a.CardType when 'S' then 'Proveedor' when 'C' then 'Cliente' when 'L' then 'Lead' end from OCRD a inner join OCRG b on b.GroupCode = a.GroupCode left join OPLN c on c.ListNum = a.ListNum left join OCTG d on d.GroupNum = a.GroupNum";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -176,7 +197,43 @@ namespace TestApi.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, ds);
         }
 
-                                //CENTROS DE COSTO
+        [HttpPost]
+        [Route("api/CreateClient")]
+        public IHttpActionResult CreateClient([FromBody] RequestClientes requestClientes)
+        {
+            //Inicializo mi conexión a SAP
+            SAPConnection conncetion = new SAPConnection();
+            SAPbobsCOM.Company company = conncetion.OpenConnection(requestClientes.dbname, requestClientes.userSap, requestClientes.userSapPass);
+
+            SAPbobsCOM.BusinessPartners vBP;
+            vBP = company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oBusinessPartners);
+            vBP.CardCode = requestClientes.CardCode;
+            vBP.CardName = requestClientes.CardName;
+            vBP.FederalTaxID = requestClientes.FederalTaxID;
+            //vBP.CardType = requestClientes.CardType;
+            vBP.Address = requestClientes.Address;
+            vBP.EmailAddress = requestClientes.EmailAddress;
+            vBP.Phone1 = requestClientes.Phone1;
+            vBP.Phone2 = requestClientes.Phone2;
+            vBP.PriceListNum = requestClientes.ListNum;
+            int status = vBP.Add();
+
+            //Compruebo si el guardado se ha realizado correctamente
+            if (status == 0)
+            {
+                responseCall.RespCode = "00";
+                responseCall.Description = "Guardado correctamente";
+            }
+            else
+            {
+                responseCall.RespCode = "99";
+                responseCall.Description = company.GetLastErrorDescription().ToString();
+
+            }
+            return Ok(responseCall);
+        }
+
+        //CENTROS DE COSTO
         [HttpPost]
         [Route("api/CentrosCosto")]
         public HttpResponseMessage getCentrosCosto([FromBody] RequestArticulos requestArticulos)
@@ -211,6 +268,7 @@ namespace TestApi.Controllers
             public double QuantityOnStock { get; set; }
             public string BarCodes { get; set; }
             public int ItemsGroupCode { get; set; }
+            public int Manufacturer { get; set; }
         }
 
         public class RequestArticulos
@@ -225,5 +283,20 @@ namespace TestApi.Controllers
             public string Description { get; set; }
         }
 
+        public class RequestClientes
+        {
+            public string CardCode { get; set; }
+            public string CardName { get; set; }
+            public string CardType { get; set; }
+            public int ListNum { get; set; }
+            public string FederalTaxID { get; set; }
+            public string Address { get; set; }
+            public string EmailAddress { get; set; }
+            public string Phone1 { get; set; }
+            public string Phone2 { get; set; }
+            public string userSap { get; set; }
+            public string userSapPass { get; set; }
+            public string dbname { get; set; }
+        }
     }
 }
