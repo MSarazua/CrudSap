@@ -121,7 +121,29 @@ namespace TestApi.Controllers
             {
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
-                    string query = "Select a.ItemName, a.ItemCode, b.ItmsGrpNam, c.WhsCode, c.OnHand, db_name() as databases, d.FirmName from OITM a inner join OITB b on a.ItmsGrpCod = b.ItmsGrpCod left join OITW c on c.ItemCode = a.ItemCode left join OMRC d on d.FirmCode = a.FirmCode";
+                    string query = "Select a.ItemName, a.ItemCode, b.ItmsGrpNam, c.WhsCode, c.OnHand, a.CodeBars, db_name() as databases, d.FirmName from OITM a inner join OITB b on a.ItmsGrpCod = b.ItmsGrpCod left join OITW c on c.ItemCode = a.ItemCode left join OMRC d on d.FirmCode = a.FirmCode";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, ds);
+        }
+
+        [HttpPost]
+        [Route("api/getOneItem")]
+        public HttpResponseMessage getOneItem([FromBody] RequestArticulos requestArticulos)
+        {
+            requestArticulos.listDatabases.Split(',').ToList<string>();
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select a.ItemName, a.ItemCode, b.ItmsGrpNam, c.WhsCode, c.OnHand, a.CodeBars, db_name() as databases, d.FirmName, a.FirmCode from OITM a inner join OITB b on a.ItmsGrpCod = b.ItmsGrpCod left join OITW c on c.ItemCode = a.ItemCode left join OMRC d on d.FirmCode = a.FirmCode where a.ItemCode = '" + requestArticulos.ItemCode + "'";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -192,6 +214,30 @@ namespace TestApi.Controllers
                 using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
                 {
                     string query = "Select a.CardCode, a.CardName, b.GroupName, a.Address, a.E_Mail, a.Phone1, a.Phone2, a.Balance, c.ListName, d.PymntGroup, a.LicTradNum, db_name() as databases, a.CardType, case a.CardType when 'S' then 'Proveedor' when 'C' then 'Cliente' when 'L' then 'Lead' end from OCRD a inner join OCRG b on b.GroupCode = a.GroupCode left join OPLN c on c.ListNum = a.ListNum left join OCTG d on d.GroupNum = a.GroupNum";
+                    cmd = new OdbcCommand(query, conn);
+                    OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                    da.Fill(ds, "Items");
+                }
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, ds);
+        }
+
+        //Traer un solo cliente
+        [HttpPost]
+        [Route("api/getOneClient")]
+        public HttpResponseMessage getOneClient([FromBody] RequestArticulos requestArticulos)
+        {
+            requestArticulos.listDatabases.Split(',').ToList<string>();
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
+            {
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                {
+                    string query = "Select a.CardCode, a.CardName, b.GroupName, a.Address, a.E_Mail, a.Phone1, a.Phone2, a.Balance, c.ListName, d.PymntGroup, a.LicTradNum, db_name() as databases, a.CardType, case a.CardType when 'S' then 'Proveedor' when 'C' then 'Cliente' when 'L' then 'Lead' end from OCRD a inner join OCRG b on b.GroupCode = a.GroupCode left join OPLN c on c.ListNum = a.ListNum left join OCTG d on d.GroupNum = a.GroupNum where a.CardCode = '" + requestArticulos.CardCode + "'";
                     cmd = new OdbcCommand(query, conn);
                     OdbcDataAdapter da = new OdbcDataAdapter(cmd);
                     da.Fill(ds, "Items");
@@ -329,6 +375,8 @@ namespace TestApi.Controllers
         {
             public string listDatabases { get; set; }
             public string server { get; set; }
+            public string ItemCode { get; set; }
+            public string CardCode { get; set; }
         }
 
         public class CallResponse
