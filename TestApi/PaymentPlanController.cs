@@ -54,7 +54,7 @@ namespace TestApi
                     SqlCommand commandDetail = new SqlCommand(querydetail, connection);
                     connection.Open();
                     commandDetail.ExecuteNonQuery();
-                    connection.Close();
+                    connection.Close(); 
                 }
             }
             catch (SqlException e)
