@@ -119,7 +119,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd"))
                 {
                     string query = "Select a.ItemName, a.ItemCode, b.ItmsGrpNam, c.WhsCode, c.OnHand, a.CodeBars, db_name() as databases, d.FirmName from OITM a inner join OITB b on a.ItmsGrpCod = b.ItmsGrpCod left join OITW c on c.ItemCode = a.ItemCode left join OMRC d on d.FirmCode = a.FirmCode";
                     cmd = new OdbcCommand(query, conn);
@@ -141,7 +141,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd"))
                 {
                     string query = "Select a.ItemName, a.ItemCode, b.ItmsGrpNam, c.WhsCode, c.OnHand, a.CodeBars, db_name() as databases, d.FirmName, a.FirmCode from OITM a inner join OITB b on a.ItmsGrpCod = b.ItmsGrpCod left join OITW c on c.ItemCode = a.ItemCode left join OMRC d on d.FirmCode = a.FirmCode where a.ItemCode = '" + requestArticulos.ItemCode + "'";
                     cmd = new OdbcCommand(query, conn);
@@ -164,7 +164,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd"))
                 {
                     string query = "Select ItmsGrpCod, ItmsGrpNam, db_name() as databases from OITB";
                     cmd = new OdbcCommand(query, conn);
@@ -187,7 +187,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd"))
                 {
                     string query = "Select FirmCode, FirmName, db_name() as databases from OMRC";
                     cmd = new OdbcCommand(query, conn);
@@ -211,7 +211,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd"))
                 {
                     string query = "Select a.CardCode, a.CardName, b.GroupName, a.Address, a.E_Mail, a.Phone1, a.Phone2, a.Balance, c.ListName, d.PymntGroup, a.LicTradNum, db_name() as databases, a.CardType, case a.CardType when 'S' then 'Proveedor' when 'C' then 'Cliente' when 'L' then 'Lead' end from OCRD a inner join OCRG b on b.GroupCode = a.GroupCode left join OPLN c on c.ListNum = a.ListNum left join OCTG d on d.GroupNum = a.GroupNum";
                     cmd = new OdbcCommand(query, conn);
@@ -235,7 +235,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd"))
                 {
                     string query = "Select a.CardCode, a.CardName, b.GroupName, a.Address, a.E_Mail, a.Phone1, a.Phone2, a.Balance, c.ListName, d.PymntGroup, a.LicTradNum, db_name() as databases, a.CardType, case a.CardType when 'S' then 'Proveedor' when 'C' then 'Cliente' when 'L' then 'Lead' end from OCRD a inner join OCRG b on b.GroupCode = a.GroupCode left join OPLN c on c.ListNum = a.ListNum left join OCTG d on d.GroupNum = a.GroupNum where a.CardCode = '" + requestArticulos.CardCode + "'";
                     cmd = new OdbcCommand(query, conn);
@@ -345,7 +345,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestArticulos.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestArticulos.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd"))
                 {
                     string query = "Select * from OPRC";
                     cmd = new OdbcCommand(query, conn);

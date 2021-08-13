@@ -8,18 +8,26 @@ namespace TestApi.Utils
     public class SAPConnection
     {
 
-        public SAPbobsCOM.Company OpenConnection(string companyDb = "SBO_PRUEBA1", string Usersap = "manager", string PassSap = "Soporte@20")
+        /// Global variable that is constant.
+        public string sqlServerSa = "sa";
+        public string sqlServerPwd= "sapmv@2018@";
+        public string SLDServer = "10.0.0.4:40000";
+        public string Server = "SRVSAP";
+        public string LicenseServer = "localhost:30000";
+
+
+        public SAPbobsCOM.Company OpenConnection(string companyDb = "SBO_DemoGT", string Usersap = "manager", string PassSap = "manager")
         {
             SAPbobsCOM.Company oCompany = new SAPbobsCOM.Company();
-            oCompany.Server = "PRUEBASTUSAP";
-            oCompany.SLDServer = "52.167.130.68:30010";
+            oCompany.Server = Server;
+            oCompany.SLDServer = SLDServer;
             oCompany.CompanyDB = companyDb;
             oCompany.DbServerType = SAPbobsCOM.BoDataServerTypes.dst_MSSQL2012;
-            oCompany.DbUserName = "sa";
-            oCompany.DbPassword = "Soporte@2021";
+            oCompany.DbUserName = sqlServerSa;
+            oCompany.DbPassword = sqlServerPwd;
             oCompany.UserName = Usersap;
             oCompany.Password = PassSap;
-            oCompany.LicenseServer = "52.167.130.68:30000";
+            oCompany.LicenseServer = LicenseServer;
             oCompany.UseTrusted = false;
             oCompany.language = SAPbobsCOM.BoSuppLangs.ln_Spanish_La;
 

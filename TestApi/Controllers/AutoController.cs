@@ -34,7 +34,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select TOP 100 a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, b.WddCode, b.Remarks, a.DocTotal, b.status, x.compnyName, c.Name, m.USER_CODE, a.DocCur, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join OUSR m on m.USERID = b.UserSign  left join OSLP n on n.SlpCode = a.SlpCode, OADM x where b.Status = 'W'";
                     cmd = new OdbcCommand(query, conn);
@@ -57,7 +57,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select TOP 100 a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'W'";
                     cmd = new OdbcCommand(query, conn);
@@ -80,7 +80,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select TOP 100 a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'Y'";
                     cmd = new OdbcCommand(query, conn);
@@ -103,7 +103,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select TOP 100 a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.FileName, p.FileExt, p.Line, p.srcPath, p.trgtPath, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry, OADM x where b.Status = 'N'";
                     cmd = new OdbcCommand(query, conn);
@@ -122,7 +122,7 @@ namespace TestApi.Controllers
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal, a.DocTotalSy as Doctotal_MS, b.status, c.Name, x.compnyName, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, f.acctcode, q.WTCode, q.WTAmnt, a.VatSum, a.VatSumSy, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry left join DRF5 q on p.AbsEntry = a.DocEntry,OADM x where b.Status = 'W' and  b.WddCode=" + requestPendientes.WddCode + "";
                 cmd = new OdbcCommand(query, conn);
@@ -140,7 +140,7 @@ namespace TestApi.Controllers
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select p.FileName, p.FileExt, p.srcPath, p.trgtPath from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join ATC1 p on p.absentry = a.AtcEntry,OADM x where b.Status = 'W' and  b.WddCode=" + requestPendientes.WddCode + "";
                 cmd = new OdbcCommand(query, conn);
@@ -158,7 +158,7 @@ namespace TestApi.Controllers
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select a.Segment_0 +' ' + a.AcctName as NombreCuenta, b.AcctCode +' ' + b.AcctName, c.AcctCode +' ' + c.AcctName, d.AcctCode +' ' + d.AcctName, convert(varchar(1),e.GroupMask) +' ' + e.AcctName from OACT a left join OACT b on a.FatherNum = b.AcctCode left join OACT c on b.FatherNum = c.AcctCode left join OACT d on c.FatherNum = d.AcctCode left join OACT e on d.FatherNum = e.AcctCode where a.Segment_0 = '" + requestPendientes.Segment_0 + "'";
                 cmd = new OdbcCommand(query, conn);
@@ -177,7 +177,7 @@ namespace TestApi.Controllers
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal as Doctotal_ML, a.DocTotalSy as Doctotal_MS, b.status, x.compnyName, c.Name, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.WTCode, p.WTAmnt, a.VatSum, a.VatSumSy, f.acctcode, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join DRF5 p on p.AbsEntry = a.DocEntry,OADM x where  b.Status = 'N' and  b.WddCode=" + requestPendientes.WddCode + "";
                 cmd = new OdbcCommand(query, conn);
@@ -196,7 +196,7 @@ namespace TestApi.Controllers
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select a.docentry, a.DocNum, a.DocStatus, a.DocDate, a.CardCode, a.CardName, e.dscription, f.segment_0, f.acctname, e.price, b.WddCode, b.Remarks, a.DocTotal as Doctotal_ML, a.DocTotalSy as Doctotal_MS, b.status, x.compnyName, c.Name, m.USER_CODE, e.OcrCode, e.OcrCode2, e.OcrCode3, e.OcrCode4, e.OcrCode5, a.Comments, n.SlpName, a.DocCur, e.TrgetEntry, p.WTCode, p.WTAmnt, a.VatSum, a.VatSumSy, f.acctcode, db_name() as databases from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OUSR m on m.USERID = o.UserID left join OSLP n on n.SlpCode = a.SlpCode left join DRF5 p on p.AbsEntry = a.DocEntry,OADM x where  b.Status = 'Y' and  b.WddCode=" + requestPendientes.WddCode + "";
                 cmd = new OdbcCommand(query, conn);
@@ -295,7 +295,7 @@ namespace TestApi.Controllers
             DataSet ds = new DataSet();
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=SBO_IDEACODEX;uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=SBO_IDEACODEX;uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select DocEntry, DocStatus, ObjType, CardName, Comments from ODRF where DocStatus = 'O'";
                 cmd = new OdbcCommand(query, conn);
