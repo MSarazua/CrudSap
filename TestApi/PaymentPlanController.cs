@@ -48,9 +48,9 @@ namespace TestApi
                 command.ExecuteNonQuery();
                 connection.Close();
 
-                for (int i = 0; i < requestPayment.Share; i++)
+                for (int i = 1; i <= requestPayment.Share; i++)
                 {
-                    string querydetail = "INSERT INTO tbl_datella_contrato(DocNum, CodeFee, DateFee, TotalFee, FeeApto, FeePar_1, FeePar_2) VALUES(" + lastId + ", '" + requestPayment.CodeFee + "', '" + requestPayment.DateFee + "', " + requestPayment.TotalFee + ", " + requestPayment.FeeApto + ", " + requestPayment.FeePar_1 + ", " + requestPayment.FeePar_2 + ")";
+                    string querydetail = "INSERT INTO tbl_datella_contrato(DocNum, CodeFee, DateFee, TotalFee, FeeApto, FeePar_1, FeePar_2) VALUES(" + lastId + ", '" + requestPayment.codeFeeNum + i + "', '" + requestPayment.DateFee + "', " + requestPayment.TotalFee + ", " + requestPayment.FeeApto + ", " + requestPayment.FeePar_1 + ", " + requestPayment.FeePar_2 + ")";
                     SqlCommand commandDetail = new SqlCommand(querydetail, connection);
                     connection.Open();
                     commandDetail.ExecuteNonQuery();
@@ -93,7 +93,7 @@ namespace TestApi
             public int FeeApto { get; set; }
             public int FeePar_1 { get; set; }
             public int FeePar_2 { get; set; }
-            public string resultSelect { get; set; }
+            public string codeFeeNum { get; set; }
         }
     }
 }
