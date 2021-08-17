@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using SAPbobsCOM;
+using TestApi.Utils;
 
 namespace TestApi.Controllers
 {
@@ -17,11 +18,12 @@ namespace TestApi.Controllers
         [Route("api/QuantityAutho")]
         public IHttpActionResult QuantityAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select * from (select count(a.DocEntry), sum(a.DocTotalSy) as DocTotal_MS from ODRF a left join OWDD b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join WDD1 o on b.WddCode = o.WddCode ,OADM x where b.Status = 'W' ) as b ( cantidad, monto)";
                 cmd = new OdbcCommand(query, conn);
@@ -36,11 +38,12 @@ namespace TestApi.Controllers
         [Route("api/CompanyAutho")]
         public IHttpActionResult CompanyAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select x.compnyName, sum(a.DocTotalSy) as Doctotal_MS from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join WDD1 o on b.WddCode = o.WddCode,OADM x where b.Status = 'W' Group By x.CompnyName";
                 cmd = new OdbcCommand(query, conn);
@@ -55,11 +58,12 @@ namespace TestApi.Controllers
         [Route("api/CategoryAutho")]
         public IHttpActionResult CategoryAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select f.AcctName, sum(a.DocTotalSy) as Doctotal_MS from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry,OADM x where b.Status = 'W' Group By f.AcctName";
                 cmd = new OdbcCommand(query, conn);
@@ -74,11 +78,12 @@ namespace TestApi.Controllers
         [Route("api/ProveedorAutho")]
         public IHttpActionResult ProveedorAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select a.CardName, sum(a.DocTotalSy) as Doctotal_MS from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join WDD1 o on b.WddCode = o.WddCode ,OADM x where b.Status = 'W' Group By a.CardName";
                 cmd = new OdbcCommand(query, conn);
@@ -93,11 +98,12 @@ namespace TestApi.Controllers
         [Route("api/CompradorAutho")]
         public IHttpActionResult CompradorAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + requestPendientes.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "Select n.SlpName, sum(a.DocTotalSy) as Doctotal_MS from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join WDD1 o on b.WddCode = o.WddCode left join OSLP n on n.SlpCode = a.SlpCode,OADM x where b.Status = 'W' Group By n.SlpName";
                 cmd = new OdbcCommand(query, conn);
@@ -112,6 +118,7 @@ namespace TestApi.Controllers
         [Route("api/QuantityAuthos")]
         public IHttpActionResult QuantityAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             requestPendientes.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
@@ -119,7 +126,7 @@ namespace TestApi.Controllers
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select * from (select count(a.DocEntry), sum(a.DocTotalSy) as DocTotal_MS from ODRF a left join OWDD b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join WDD1 o on b.WddCode = o.WddCode ,OADM x where b.Status = 'W' ) as b ( cantidad, monto)";
                     cmd = new OdbcCommand(query, conn);
@@ -134,13 +141,14 @@ namespace TestApi.Controllers
         [Route("api/CompanyAuthos")]
         public IHttpActionResult CompanyAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select x.compnyName, sum(a.DocTotalSy) as Doctotal_MS from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join WDD1 o on b.WddCode = o.WddCode,OADM x where b.Status = 'W' Group By x.CompnyName";
                     cmd = new OdbcCommand(query, conn);
@@ -155,13 +163,14 @@ namespace TestApi.Controllers
         [Route("api/CategoryAuthos")]
         public IHttpActionResult CategoryAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select f.AcctName, sum(a.DocTotalSy) as Doctotal_MS from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join OACT f on f.acctcode = e.acctcode left join WDD1 o on b.WddCode = o.WddCode left join OSLP n on n.SlpCode = a.SlpCode left join ATC1 p on p.absentry = a.AtcEntry,OADM x where b.Status = 'W' Group By f.AcctName";
                     cmd = new OdbcCommand(query, conn);
@@ -176,13 +185,14 @@ namespace TestApi.Controllers
         [Route("api/ProveedorAuthos")]
         public IHttpActionResult ProveedorAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select a.CardName, sum(a.DocTotalSy) as Doctotal_MS from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join DRF1 e on e.docentry = a.docentry left join WDD1 o on b.WddCode = o.WddCode ,OADM x where b.Status = 'W' Group By a.CardName";
                     cmd = new OdbcCommand(query, conn);
@@ -197,13 +207,14 @@ namespace TestApi.Controllers
         [Route("api/CompradorAuthos")]
         public IHttpActionResult CompradorAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
             foreach (var item in requestPendientes.listDatabases.Split(',').ToList<string>())
             {
-                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid=sa;pwd=Soporte@2021"))
+                using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestPendientes.server + ";Database=" + item + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "Select n.SlpName, sum(a.DocTotalSy) as Doctotal_MS from ODRF a left join OWDD  b on a.DocEntry = b.DraftEntry left join OWST c on c.WstCode = b.CurrStep left join WDD1 o on b.WddCode = o.WddCode left join OSLP n on n.SlpCode = a.SlpCode,OADM x where b.Status = 'W' Group By n.SlpName";
                     cmd = new OdbcCommand(query, conn);
@@ -218,11 +229,12 @@ namespace TestApi.Controllers
         [Route("api/EstadoResultados")]
         public IHttpActionResult EstadoResultados([FromBody] RequestEstadoResultados requestEstadoResultados)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
 
-               using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestEstadoResultados.server + ";Database=CRM_MODUS;uid=sa;pwd=Soporte@2021"))
+               using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestEstadoResultados.server + ";Database=" + requestEstadoResultados.listDatabases + ";uid=" +  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
                 {
                     string query = "SELECT * FROM [dbo].[fnEstadoResultado] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "', '" + requestEstadoResultados.Nivel + "') GO";
                     cmd = new OdbcCommand(query, conn);
@@ -236,11 +248,12 @@ namespace TestApi.Controllers
         [Route("api/BalanceGeneral")]
         public IHttpActionResult BalanceGeneral([FromBody] RequestEstadoResultados requestEstadoResultados)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;    
             OdbcCommand cmd;
 
-            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestEstadoResultados.server + ";Database=" + requestEstadoResultados.listDatabases + ";uid=sa;pwd=Soporte@2021"))
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestEstadoResultados.server + ";Database=" + requestEstadoResultados.listDatabases + ";uid="+  conncetion.sqlServerSa +";pwd=" + conncetion.sqlServerPwd))
             {
                 string query = "SELECT * FROM [dbo].[fnBalanceGeneral] ('" + requestEstadoResultados.fechaIni + "','" + requestEstadoResultados.fechaFin + "','" + requestEstadoResultados.fechaInicial + "','" + requestEstadoResultados.fechaFinal + "', '" + requestEstadoResultados.Nivel + "') GO";
                 cmd = new OdbcCommand(query, conn);
