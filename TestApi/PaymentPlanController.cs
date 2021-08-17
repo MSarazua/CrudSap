@@ -50,11 +50,29 @@ namespace TestApi
 
                 for (int i = 1; i <= requestPayment.Share; i++)
                 {
-                    string querydetail = "INSERT INTO tbl_datella_contrato(DocNum, CodeFee, DateFee, TotalFee, FeeApto, FeePar_1, FeePar_2) VALUES(" + lastId + ", '" + requestPayment.codeFeeNum + i + "', '" + requestPayment.DateFee + "', " + requestPayment.TotalFee + ", " + requestPayment.FeeApto + ", " + requestPayment.FeePar_1 + ", " + requestPayment.FeePar_2 + ")";
-                    SqlCommand commandDetail = new SqlCommand(querydetail, connection);
-                    connection.Open();
-                    commandDetail.ExecuteNonQuery();
-                    connection.Close(); 
+                    if (i == 1)
+                    {
+                        string querydetail = "INSERT INTO tbl_datella_contrato(DocNum, CodeFee, DateFee, TotalFee, FeeApto, FeePar_1, FeePar_2) VALUES(" + lastId + ", '" + requestPayment.codeFeeNum + i + "', '" + requestPayment.DateFee + "', " + requestPayment.TotalFee + ", " + requestPayment.FeeApto + ", " + requestPayment.FeePar_1 + ", " + requestPayment.FeePar_2 + ")";
+                        SqlCommand commandDetail = new SqlCommand(querydetail, connection);
+                        connection.Open();
+                        commandDetail.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                    else if(i > 1)
+                    {
+                        for (int n = 1; n <= requestPayment.Share; n++)
+                        {
+                            DateTime fecha = requestPayment.DateFee;
+                            fecha = fecha.AddDays(30);
+
+                            string querydetail = "INSERT INTO tbl_datella_contrato(DocNum, CodeFee, DateFee, TotalFee, FeeApto, FeePar_1, FeePar_2) VALUES(" + lastId + ", '" + requestPayment.codeFeeNum + i + "', '" + fecha + "', " + requestPayment.TotalFee + ", " + requestPayment.FeeApto + ", " + requestPayment.FeePar_1 + ", " + requestPayment.FeePar_2 + ")";
+                            SqlCommand commandDetail = new SqlCommand(querydetail, connection);
+                            connection.Open();
+                            commandDetail.ExecuteNonQuery();
+                            connection.Close();
+                        }
+
+                    }
                 }
             }
             catch (SqlException e)
@@ -88,7 +106,7 @@ namespace TestApi
             //Detalle de contrato
             public int DocNum { get; set; }
             public string CodeFee { get; set; }
-            public string DateFee { get; set; }
+            public DateTime DateFee { get; set; }
             public int TotalFee { get; set; }
             public int FeeApto { get; set; }
             public int FeePar_1 { get; set; }

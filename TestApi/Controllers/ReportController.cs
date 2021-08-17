@@ -250,6 +250,24 @@ namespace TestApi.Controllers
             return Ok(ds); 
         }
 
+        [HttpPost]
+        [Route("api/Inventario")]
+        public IHttpActionResult Inventario([FromBody] RequestEstadoResultados requestEstadoResultados)
+        {
+            DataSet ds = new DataSet();
+            DataTable itemsData;
+            OdbcCommand cmd;
+
+            using (OdbcConnection conn = new OdbcConnection(@"Driver={SQL Server};Server=" + requestEstadoResultados.server + ";Database=DATA;uid=sa;pwd=Soporte@2021"))
+            {
+                string query = "Select a.ItemCode as CodigoArtículo, a.ItemName as Descripcion, a.OnHand as CantidadDisponible, b.PriceList as NoLista, b.Price as Precio, c.ListName as NombreLista, sum(	case when d.WhsCode = '01' Then d.OnHand else 0 end ) as BodegaCentral, sum(	case when d.WhsCode = '02' Then d.OnHand else 0 end) as BodegaQuetzaltenango, sum(	case when d.WhsCode = '03' Then d.OnHand else 0 end) as BodegaHuehuetenango from [Tecno].[dbo].[OITM] a left join [Tecno].[dbo].[ITM1] b on a.ItemCode = b.ItemCode left join [Tecno].[dbo].[OPLN] c on b.PriceList = c.ListNum left join [Tecno].[dbo].[OITW] d on d.ItemCode = a.ItemCode left join [Tecno].[dbo].[OWHS] e on e.WhsCode = d.WhsCode where b.PriceList = 1 and d.WhsCode in ('01', '02', '03') Group By a.ItemCode, a.ItemName, a.OnHand, b.PriceList, b.Price, c.ListName";
+                cmd = new OdbcCommand(query, conn);
+                OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                da.Fill(ds, "Items");
+            }
+            return Ok(ds);
+        }
+
         public class RequestPendientes
         {
             public string listDatabases { get; set; }
@@ -268,6 +286,8 @@ namespace TestApi.Controllers
             public string fechaFinal { get; set; }
             public string Nivel { get; set; }
             public string server { get; set; }
+            public string codigo { get; set; }
+            public string descripcion { get; set; }
         }
     }
 }
