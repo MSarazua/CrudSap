@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using SAPbobsCOM;
+using TestApi.Utils;
 
 namespace TestApi.Controllers
 {
@@ -17,6 +18,7 @@ namespace TestApi.Controllers
         [Route("api/QuantityAutho")]
         public IHttpActionResult QuantityAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -36,6 +38,7 @@ namespace TestApi.Controllers
         [Route("api/CompanyAutho")]
         public IHttpActionResult CompanyAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -55,6 +58,7 @@ namespace TestApi.Controllers
         [Route("api/CategoryAutho")]
         public IHttpActionResult CategoryAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -74,6 +78,7 @@ namespace TestApi.Controllers
         [Route("api/ProveedorAutho")]
         public IHttpActionResult ProveedorAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -93,6 +98,7 @@ namespace TestApi.Controllers
         [Route("api/CompradorAutho")]
         public IHttpActionResult CompradorAutho([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -112,6 +118,7 @@ namespace TestApi.Controllers
         [Route("api/QuantityAuthos")]
         public IHttpActionResult QuantityAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             requestPendientes.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
@@ -134,6 +141,7 @@ namespace TestApi.Controllers
         [Route("api/CompanyAuthos")]
         public IHttpActionResult CompanyAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -155,6 +163,7 @@ namespace TestApi.Controllers
         [Route("api/CategoryAuthos")]
         public IHttpActionResult CategoryAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -176,6 +185,7 @@ namespace TestApi.Controllers
         [Route("api/ProveedorAuthos")]
         public IHttpActionResult ProveedorAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -197,6 +207,7 @@ namespace TestApi.Controllers
         [Route("api/CompradorAuthos")]
         public IHttpActionResult CompradorAuthos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -218,6 +229,7 @@ namespace TestApi.Controllers
         [Route("api/EstadoResultados")]
         public IHttpActionResult EstadoResultados([FromBody] RequestEstadoResultados requestEstadoResultados)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -236,6 +248,7 @@ namespace TestApi.Controllers
         [Route("api/BalanceGeneral")]
         public IHttpActionResult BalanceGeneral([FromBody] RequestEstadoResultados requestEstadoResultados)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;    
             OdbcCommand cmd;

@@ -27,6 +27,7 @@ namespace TestApi.Controllers
         [Route("api/Pendiente")]
         public IHttpActionResult getAutoPendiente([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             requestPendientes.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
@@ -50,6 +51,7 @@ namespace TestApi.Controllers
         [Route("api/Pendientes")]
         public IHttpActionResult getAutoPendientes([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             requestPendientes.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
@@ -73,6 +75,7 @@ namespace TestApi.Controllers
         [Route("api/DocumentosAutorizados")]
         public IHttpActionResult getDocumentosAutorizados([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             requestPendientes.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
@@ -96,6 +99,7 @@ namespace TestApi.Controllers
         [Route("api/DocumentosRechazados")]
         public IHttpActionResult getDocumentosRechazados([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             requestPendientes.listDatabases.Split(',').ToList<string>();
             DataSet ds = new DataSet();
             DataTable itemsData;
@@ -119,6 +123,7 @@ namespace TestApi.Controllers
         [Route("api/detalleUnaAuto")]
         public IHttpActionResult getDetalleUnaAuto([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -137,6 +142,7 @@ namespace TestApi.Controllers
         [Route("api/archivos")]
         public IHttpActionResult getArchivos([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -155,6 +161,7 @@ namespace TestApi.Controllers
         [Route("api/cuentas")]
         public IHttpActionResult getCuentas([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -173,6 +180,7 @@ namespace TestApi.Controllers
         [Route("api/retencion")]
         public IHttpActionResult getRetencion([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -192,6 +200,7 @@ namespace TestApi.Controllers
         [Route("api/retencionAutorizados")]
         public IHttpActionResult getRetencionAutorizados([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -292,6 +301,7 @@ namespace TestApi.Controllers
         [Route("api/OpenDoc")]
         public HttpResponseMessage OpenDoc(RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             OdbcCommand cmd;
 

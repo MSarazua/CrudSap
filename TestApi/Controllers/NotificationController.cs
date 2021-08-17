@@ -7,6 +7,7 @@ using System.Linq;
 using System.Data;
 using System.Data.Odbc;
 using System.Web.Http;
+using TestApi.Utils;
 
 namespace TestApi.Controllers
 {
@@ -16,6 +17,7 @@ namespace TestApi.Controllers
         [Route("api/RecordatorioPago")]
         public IHttpActionResult RecordatorioPago([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -38,6 +40,7 @@ namespace TestApi.Controllers
         [Route("api/DetalleNotificacion")]
         public IHttpActionResult DetalleNotificacion([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
@@ -59,6 +62,7 @@ namespace TestApi.Controllers
         [Route("api/DetalleVentas")]
         public IHttpActionResult DetalleVentas([FromBody] RequestPendientes requestPendientes)
         {
+            SAPConnection conncetion = new SAPConnection();
             DataSet ds = new DataSet();
             DataTable itemsData;
             OdbcCommand cmd;
